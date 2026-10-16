@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Tasks | Task Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand-mark">TM</div>
+      <nav class="side-nav"></nav>
+      <a class="side-link active" href="#tasks" aria-label="Tasks" title="Tasks">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3.5 10.5 12 3l8.5 7.5M5.5 9v11h13V9M9.5 20v-6h5v6" />
+        </svg>
+      </a>
+      <a class="side-link" href="#summary" aria-label="Summary" title="Summary">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 20V4h16v16zM8 15v-3m4 3V8m4 7v-5" />
+        </svg>
+      </a>
+      <a class="side-link" href="#tasks" aria-label="Activity" title="Activity">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v9l7.5 4.3A8.5 8.5 0 1 1 12 3Zm2 0a8.5 8.5 0 0 1 7 7h-7z" />
+        </svg>
+      </a>
+      <a class="side-link" href="#tasks" aria-label="Calendar" title="Calendar">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="5" width="16" height="16" rx="2" />
+          <path d="M8 3v4m8-4v4M4 10h16M8 14h3m-3 3h3" />
+        </svg>
+      </a>
+      </nav>
+      <div class="side-bottom">
+        <button class="side-link icon-button" id="themeToggle" aria-label="Toggle dark theme" title="Toggle theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z" />
+          </svg>
+        </button>
+        <a class="side-link" href="#summary" aria-label="Settings" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" />
+            <path
+              d="m19.4 15 .1.1 1.1.9-1.5 2.6-1.4-.6a8 8 0 0 1-1.5.9l-.2 1.5h-3l-.3-1.5a8 8 0 0 1-1.5-.9l-1.4.6-1.5-2.6 1.2-.9a7 7 0 0 1 0-1.8l-1.2-.9 1.5-2.6 1.4.6a8 8 0 0 1 1.5-.9l.3-1.5h3l.2 1.5a8 8 0 0 1 1.5.9l1.4-.6 1.5 2.6-1.1.9a7 7 0 0 1 0 1.8Z" />
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark small">TM</span><strong>Task Manager</strong></div>
+        <div class="topbar-actions">
+          <label class="search-box" aria-label="Search tasks">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.8" cy="10.8" r="6.8" />
+              <path d="m16 16 5 5" />
+            </svg>
+            <input id="searchInput" type="search" placeholder="Search tasks...">
+          </label>
+          <button class="icon-top" aria-label="Notifications" title="Notifications">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Zm-8 12h4" />
+            </svg>
+          </button>
+          <button class="avatar" aria-label="Profile">K</button>
+        </div>
+      </header>
+
+      <main id="tasks" class="content">
+        <section class="heading-row">
+          <div>
+            <p class="eyebrow">YOUR WORKSPACE</p>
+            <h1>My Tasks</h1>
+            <p class="subtitle">Keep track of what needs to get done.</p>
+          </div>
+          <button id="createTaskButton" class="create-button"><span>＋</span> Create New Task</button>
+        </section>
+
+        <section id="summary" class="summary-cards" aria-label="Task summary">
+          <article class="summary-card"><span class="summary-icon blue">▤</span>
+            <div><small>Total tasks</small><strong id="totalCount">0</strong></div>
+          </article>
+          <article class="summary-card"><span class="summary-icon amber">◷</span>
+            <div><small>Pending</small><strong id="pendingCount">0</strong></div>
+          </article>
+          <article class="summary-card"><span class="summary-icon green">✓</span>
+            <div><small>Completed</small><strong id="completedCount">0</strong></div>
+          </article>
+          <article class="summary-card"><span class="summary-icon rose">!</span>
+            <div><small>Overdue</small><strong id="overdueCount">0</strong></div>
+          </article>
+        </section>
+
+        <section class="task-panel">
+          <div class="panel-top">
+            <div class="tabs" role="tablist" aria-label="Filter tasks by status">
+              <button class="tab active" data-status="all" role="tab" aria-selected="true">All Tasks</button>
+              <button class="tab" data-status="pending" role="tab" aria-selected="false">Pending</button>
+              <button class="tab" data-status="completed" role="tab" aria-selected="false">Completed</button>
+            </div>
+            <div class="filters">
+              <label class="date-filter"><span aria-hidden="true">▦</span><input id="dateFilter" type="date"
+                  aria-label="Filter by deadline"></label>
+              <select id="priorityFilter" aria-label="Filter by priority">
+                <option value="all">All priorities</option>
+                <option value="high">High priority</option>
+                <option value="medium">Medium priority</option>
+                <option value="low">Low priority</option>
+              </select>
+              <button id="filterButton" class="filter-button">Filter</button>
+            </div>
+          </div>
+
+          <div id="notice" class="notice" role="status" aria-live="polite"></div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Deadline</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="taskRows">
+                <tr>
+                  <td colspan="6" class="empty-state">Loading tasks...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <span id="pageSummary">0 tasks</span>
+            <div class="pagination">
+              <label>Rows per page
+                <select id="pageSize">
+                  <option>5</option>
+                  <option selected>10</option>
+                  <option>20</option>
+                </select>
+              </label>
+              <span id="pageRange">0–0 of 0</span>
+              <button id="previousPage" class="page-arrow" aria-label="Previous page" disabled>‹</button>
+              <button id="nextPage" class="page-arrow" aria-label="Next page" disabled>›</button>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer"><strong>Task Manager</strong><span>Plan your day, one task at a time.</span></footer>
+    </div>
+  </div>
+
+  <dialog id="taskDialog" class="task-dialog">
+    <form id="taskForm" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">TASK DETAILS</p>
+          <h2 id="dialogTitle">Create a task</h2>
+        </div><button type="button" id="closeDialog" class="close-button" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="taskId">
+      <label class="form-field">Title <span>*</span><input id="taskTitle" maxlength="140" required
+          placeholder="e.g. Prepare presentation"></label>
+      <label class="form-field">Description<textarea id="taskDescription" rows="3"
+          placeholder="Add a few details..."></textarea></label>
+      <div class="form-grid">
+        <label class="form-field">Deadline<input id="taskDeadline" type="date"></label>
+        <label class="form-field">Priority<select id="taskPriority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select></label>
+      </div>
+      <label class="form-field" id="statusField">Status<select id="taskStatus">
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select></label>
+      <p id="formError" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="cancel-button">Cancel</button><button
+          id="saveTaskButton" class="create-button" type="submit">Save Task</button></div>
+    </form>
+  </dialog>
+
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+
+</html>
